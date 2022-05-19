@@ -1,0 +1,27 @@
+version: "3"
+
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:13-alpine3.15
+    volumes:
+      - postgres_volume:/var/lib/postgresql/data/
+    expose:
+      - $POSTGRES_PORT
+    env_file:
+      - .env
+
+  sqlete_to_postgres:
+    container_name: sqlete_to_postgres
+    build: .
+    command: [ 'python','run.py' ]
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+
+
+volumes:
+  postgres_volume:
+
+

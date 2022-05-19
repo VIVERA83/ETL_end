@@ -1,0 +1,73 @@
+version: "3"
+
+services:
+
+  postgres:
+    container_name: postgres
+    image: postgres:13-alpine3.15
+    volumes:
+      - postgres_volume:/var/lib/postgresql/data/
+    expose:
+      - $POSTGRES_PORT
+    ports:
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
+    env_file:
+      - .env
+
+  sqlete_to_postgres:
+    container_name: sqlete_to_postgres
+    working_dir: /sqlete_to_postgres
+    build:
+      context: .
+      dockerfile: Dockerfile_sqlete_to_postgres
+    command: [ 'python','run.py' ]
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+
+  redis:
+    container_name: redis
+    image: redis:latest
+    volumes:
+      - redis_volume:/data
+    expose:
+      - ${REDIS_PORT}
+    ports:
+      - ${REDIS_PORT}:${REDIS_PORT}
+      - ${REDIS_PORT_TWO}:${REDIS_PORT_TWO}
+    env_file:
+      - .env
+
+  elasticsearch:
+    container_name: elasticsearch
+    image: elasticsearch:7.17.1
+    environment:
+      - discovery.type=single-node
+    volumes:
+      - elasticsearch_volume:/usr/share/elasticsearch/data
+    expose:
+      - ${ELASTIC_PORT}
+    ports:
+      - ${ELASTIC_PORT}:${ELASTIC_PORT}
+      - ${ELASTIC_PORT_TWO}:${ELASTIC_PORT_TWO}
+    env_file:
+      - .env
+
+  postgres_to_es:
+    container_name: postgres_to_es
+    working_dir: /postgres_to_es
+    build:
+      context: .
+      dockerfile: Dockerfile_postgres_to_es
+    command: [ 'python','run.py' ]
+    env_file:
+      - .env
+    depends_on:
+      - elasticsearch
+      - sqlete_to_postgres
+
+volumes:
+  postgres_volume:
+  redis_volume:
+  elasticsearch_volume:
