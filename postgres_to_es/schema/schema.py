@@ -55,6 +55,19 @@ class PersonSchema(BaseSchema):
     __model__ = Person
 
     full_name = fields.Str(required=True)
+    birth_date = fields.Date(allow_none=True)
+    role = fields.Str()
+    film_ids = fields.List(fields.UUID(), allow_none=True)
+
+    @pre_load
+    def make(self, data: dict[str, Any], **kwargs):  # noqa
+        if role := data.get("role"):
+            data["role"] = ", ".join(role)
+        if films_ids := data.get("film_ids"):
+            data["film_ids"] = films_ids.split(",")
+        if not data.get("birth_date"):
+            data["birth_date"] = None
+        return data
 
 
 class DeleteSchema(BaseSchema):

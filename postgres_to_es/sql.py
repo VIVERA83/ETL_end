@@ -26,8 +26,16 @@ SQL_MOVIES = {"select": """
               "prescription": "select",
               }
 
-SQL_PERSON = {"select": """select p.id, p.full_name from "content".person p """,
-              "where": "p.modified > '{date}' ",
+SQL_PERSON = {"select": """
+               select 
+               p.id, 
+               p.full_name,
+               coalesce(array_agg(distinct pfw."role") filter (where p.id = pfw.person_id), '{}') as role, 
+               coalesce(array_agg(distinct fw.id) filter (where pfw."role" IN ('writer', 'director', 'actor')), '{}') as film_ids
+               from "content".person p
+               left join "content".person_film_work pfw  on pfw.person_id  = p.id 
+               left join "content".film_work fw on fw.id = pfw.film_work_id """,
+              "where": "p.modified > '{date}' or fw.modified >'{date}' ",
               "group_field": "p.id",
               "order_field": "p.modified",
               "index": "person",

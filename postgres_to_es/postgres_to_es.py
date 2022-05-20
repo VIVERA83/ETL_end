@@ -32,11 +32,9 @@ def load_from_postgres_to_elastic(state: State,
         sql_request.offset = index.offset if index else 0
         flag = False
         for chang in pg.execute(sql_request):
-
             if chang:
                 flag = True
                 objs = create_objects(chang, schema)
-
                 match sql_request.prescription:
                     case "select":
                         es.insert_many(sql_request.index, schema().dump(objs, many=True))

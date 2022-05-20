@@ -20,11 +20,17 @@ if __name__ == "__main__":
     filename = "elasticsearch/movies_es_schema.json"
     index = "movies"
 
+    # создаем индекс movies
     with open(filename, "r", encoding="utf-8") as file:
         schema_movies: dict = json.loads(file.read())
     es = BaseElasticsearch(host=os.getenv("ELASTIC_HOST"))
-
     before_execution()(es.create_index)(index, schema_movies)
+
+    # создаем индекс person
+    with open("elasticsearch/person_es_schema.json", "r", encoding="utf-8") as file:
+        schema_movies: dict = json.loads(file.read())
+    es = BaseElasticsearch(host=os.getenv("ELASTIC_HOST"))
+    before_execution()(es.create_index)("person", schema_movies)
 
     pg = PostgresExtractor(os.getenv("POSTGRES_DSN"))
     state = State(RedisStorage(Redis(os.getenv("REDIS_HOST"))))

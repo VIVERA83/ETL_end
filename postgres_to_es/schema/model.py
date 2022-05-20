@@ -1,6 +1,6 @@
 import datetime
 import uuid
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 
 @dataclass
@@ -43,6 +43,9 @@ class Genre:
 class Person:
     id: uuid
     full_name: str
+    role: str
+    film_ids: list[uuid]
+    birth_date: datetime.datetime
 
 
 @dataclass
