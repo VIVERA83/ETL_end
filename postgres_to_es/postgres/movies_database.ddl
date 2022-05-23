@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS content.person_film_work (
     created timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS  content.genre (
+CREATE TABLE IF NOT EXISTS content.genre (
     id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     name varchar (20),
     description TEXT,

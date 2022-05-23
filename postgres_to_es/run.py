@@ -33,7 +33,7 @@ if __name__ == "__main__":
     before_execution()(es.create_index)("person", schema_movies)
 
     # Postgres, добавляем необходимые функции, и триггеры, и так на всякий случай таблицы.
-    create_table(os.getenv("POSTGRES_DSN", "postgres://app:123qwe@127.0.0.1:5432/movies_database"))
+    create_table(os.getenv("POSTGRES_DSN"))
 
     pg = PostgresExtractor(os.getenv("POSTGRES_DSN", "postgres://app:123qwe@127.0.0.1:5432/movies_database"))
     state = State(RedisStorage(Redis(os.getenv("REDIS_HOST", "127.0.0.1"))))
