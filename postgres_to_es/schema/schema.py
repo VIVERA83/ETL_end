@@ -56,17 +56,24 @@ class PersonSchema(BaseSchema):
 
     full_name = fields.Str(required=True)
     birth_date = fields.Date(allow_none=True)
-    role = fields.Str()
-    film_ids = fields.List(fields.UUID(), allow_none=True)
+    role = fields.Str(allow_none=True)
+    film_ids = fields.List(fields.Str(allow_none=True), allow_none=True)
 
     @pre_load
     def make(self, data: dict[str, Any], **kwargs):  # noqa
         if role := data.get("role"):
             data["role"] = ", ".join(role)
+        else:
+            data["role"] = None
+
         if films_ids := data.get("film_ids"):
             data["film_ids"] = films_ids.split(",")
+        else:
+            data["film_ids"] = None
+
         if not data.get("birth_date"):
             data["birth_date"] = None
+
         return data
 
 

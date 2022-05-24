@@ -43,9 +43,9 @@ class Genre:
 class Person:
     id: uuid
     full_name: str
+    birth_date: datetime.datetime
     role: str
     film_ids: list[uuid]
-    birth_date: datetime.datetime
 
 
 @dataclass

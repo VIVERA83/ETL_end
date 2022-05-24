@@ -16,6 +16,7 @@ ic.includeContext = True
 def create_objects(chang: list[dict], schema: dataclass) -> list[dataclass]:
     field_names = [name for name in chang[0].keys()]
     data = [{key: item[key] for key in field_names} for item in chang]
+    ic(field_names, data)
     return schema().load(data, many=True)
 
 
@@ -34,6 +35,7 @@ def load_from_postgres_to_elastic(state: State,
         for chang in pg.execute(sql_request):
             if chang:
                 flag = True
+                ic(chang)
                 objs = create_objects(chang, schema)
                 match sql_request.prescription:
                     case "select":
