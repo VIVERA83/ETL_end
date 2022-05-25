@@ -53,45 +53,6 @@ create table if not exists content.del_item(
     created timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP
     );
 
-
-create OR replace function trigger_before_del () returns trigger as
-$$
-begin
-	insert into del_item (table_name, field_id) values (TG_RELNAME, old.id);
-	case TG_RELNAME
-		when 'genre' then
-			update "content".film_work  as fw set modified = default
-			from "content".genre_film_work as gfw , "content".genre as g
-			where gfw.genre_id = g.id  and gfw.film_work_id =fw.id and g."name" = old."name";
-		when 'person' then
-			update "content".film_work  as fw set modified = default
-			from "content".person_film_work as pfw , "content".person as p
-			where pfw.person_id = p.id  and pfw.film_work_id =fw.id and p.full_name  = old.full_name;
-		else
-			select table_name
-			from information_schema.columns
-			where table_schema='public';
-	end case;
-	return old;
-end;
-$$
-LANGUAGE plpgsql;
-
--- Создаем триггеры на удаление записей, если записи удаляются из основных таблиц
--- мы информацию об удаленных полях заносим в таблицу  del_item
-
-create trigger tr_genre_before_del
-before delete on content.genre for each row
-execute procedure trigger_before_del();
-
-create trigger tr_person_before_del
-before delete on content.person for each row
-execute procedure trigger_before_del();
-
-create trigger tr_content_film_work_before_del
-before delete on content.film_work for each row
-execute procedure trigger_before_del();
-
 -- создаем функцию которая возвращает массив жанров по id фильма
 CREATE OR replace function get_genre_by_id_film (uuid) RETURNS SETOF character array as
 $$
@@ -131,3 +92,43 @@ group by fw2.id;
 
 $$
 LANGUAGE sql;
+
+create OR replace function trigger_before_del () returns trigger as
+$$
+begin
+	insert into del_item (table_name, field_id) values (TG_RELNAME, old.id);
+	case TG_RELNAME
+		when 'genre' then
+			update "content".film_work  as fw set modified = default
+			from "content".genre_film_work as gfw , "content".genre as g
+			where gfw.genre_id = g.id  and gfw.film_work_id =fw.id and g."name" = old."name";
+		when 'person' then
+			update "content".film_work  as fw set modified = default
+			from "content".person_film_work as pfw , "content".person as p
+			where pfw.person_id = p.id  and pfw.film_work_id =fw.id and p.full_name  = old.full_name;
+		else
+			select table_name
+			from information_schema.columns
+			where table_schema='public';
+	end case;
+	return old;
+end;
+$$
+LANGUAGE plpgsql;
+
+-- Создаем триггеры на удаление записей, если записи удаляются из основных таблиц
+-- мы информацию об удаленных полях заносим в таблицу  del_item
+
+create trigger tr_genre_before_del
+before delete on content.genre for each row
+execute procedure trigger_before_del();
+
+create trigger tr_person_before_del
+before delete on content.person for each row
+execute procedure trigger_before_del();
+
+create trigger tr_content_film_work_before_del
+before delete on content.film_work for each row
+execute procedure trigger_before_del();
+
+

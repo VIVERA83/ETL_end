@@ -12,7 +12,7 @@ if __name__ == "__main__":
 
     logging.info(" Начало создаем таблицы в POSTGRES")
     pg_con = psycopg2.connect(dsn=os.getenv("POSTGRES_DSN"))
-    create_table(pg_con)
+    # create_table(pg_con)
 
     logging.info(f" текущая папка {os.getcwd()+' app/db.sqlite'}")
     logging.info(" Начало загрузки данных в POSTGRES")

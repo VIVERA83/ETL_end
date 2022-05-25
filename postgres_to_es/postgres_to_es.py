@@ -1,7 +1,6 @@
 import logging
 from datetime import datetime
 
-from icecream import ic
 from marshmallow_dataclass import dataclass
 
 from elasticsearch.elasticsearch import BaseElasticsearch
@@ -10,13 +9,10 @@ from helpers.state import State
 from postgres.postgresextractor import PostgresExtractor
 from postgres.schema import SqlRequestSchema, StateSchema
 
-ic.includeContext = True
-
 
 def create_objects(chang: list[dict], schema: dataclass) -> list[dataclass]:
     field_names = [name for name in chang[0].keys()]
     data = [{key: item[key] for key in field_names} for item in chang]
-    ic(field_names, data)
     return schema().load(data, many=True)
 
 
@@ -35,7 +31,6 @@ def load_from_postgres_to_elastic(state: State,
         for chang in pg.execute(sql_request):
             if chang:
                 flag = True
-                ic(chang)
                 objs = create_objects(chang, schema)
                 match sql_request.prescription:
                     case "select":
@@ -46,7 +41,7 @@ def load_from_postgres_to_elastic(state: State,
                         obj = None
                         count = 0
                         for count, obj in enumerate(objs):
-                            ic(es.delete_document_by_id(obj.table_name, obj.field_id))
+                            es.delete_document_by_id(obj.table_name, obj.field_id)
                             logging.info(f" Удалена запись из {obj.table_name.upper()}, id = {obj.field_id}")
                         logging.info(f" Всего удалено записей из {obj.table_name.upper()}, {count + 1}")
                     case _:
