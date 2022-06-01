@@ -1,7 +1,7 @@
 import datetime
 import uuid
 from dataclasses import dataclass
-
+from typing import Optional
 
 @dataclass
 class Actor:
@@ -16,10 +16,17 @@ class Writer:
 
 
 @dataclass
+class Genre:
+    id: uuid
+    name: str
+    description: Optional[str] = None
+
+
+@dataclass
 class Film:
     id: uuid
     imdb_rating: float
-    genre: list[str]
+    genre: list[Genre]
     title: str
     description: str
     director: list[str]
@@ -31,12 +38,6 @@ class Film:
 
 
 # ________________
-
-@dataclass
-class Genre:
-    id: uuid
-    name: str
-    description: str
 
 
 @dataclass

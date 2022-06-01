@@ -1,3 +1,4 @@
 .idea
 ./**/sqlete_to_postgres/app/__pycache__
+./**/__pycache__
 .env

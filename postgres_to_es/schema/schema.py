@@ -31,10 +31,16 @@ class WriterSchema(BaseSchema):
     name = fields.Str(allow_none=True)
 
 
+class GenreSchema(BaseSchema):
+    __model__ = Genre
+    name = fields.Str(allow_none=True)
+    descriptionr = fields.Str(allow_none=True)
+
+
 class FilmSchema(BaseSchema):
     __model__ = Film
     imdb_rating = fields.Float(allow_none=True)
-    genre = fields.List(fields.Str(allow_none=True))
+    genre = fields.List(fields.Nested(GenreSchema))
     title = fields.Str()
     description = fields.Str()
     director = fields.List(fields.Str(allow_none=True))

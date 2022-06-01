@@ -53,16 +53,17 @@ create table if not exists content.del_item(
     created timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP
     );
 
--- создаем функцию которая возвращает массив жанров по id фильма
-CREATE OR replace function get_genre_by_id_film (uuid) RETURNS SETOF character array as
+-- создаем функцию которая возвращает JSON жанров по id фильма ('genre')
+CREATE OR replace function get_genre_by_id_film_from_JSON (uuid) RETURNS SETOF json  as
 $$
 select
-array_agg(distinct g.id)
+coalesce(json_agg(distinct jsonb_build_object('id', g.id, 'name', g."name")), '[]')
 from "content".film_work fw2
 left join "content".genre_film_work gfw on gfw.film_work_id = fw2.id
-left join "content".genre g on g.id =gfw.genre_id
+left join "content".genre g on g.id = gfw.genre_id
 where $1=fw2.id
-group by fw2.id;
+group by fw2.id
+
 $$
 LANGUAGE sql;
 

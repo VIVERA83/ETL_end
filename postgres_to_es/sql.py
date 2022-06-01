@@ -5,7 +5,7 @@ SQL_MOVIES = {"select": """
                SELECT
                fw.id,
                fw.rating as imdb_rating,
-               get_genre_by_id_film (fw.id) as genre,
+               get_genre_by_id_film_from_JSON (fw.id) as genre,
                fw.title,
                coalesce(fw.description, '') as description,
                get_person_by_id_film (fw.id, 'director') as director,
