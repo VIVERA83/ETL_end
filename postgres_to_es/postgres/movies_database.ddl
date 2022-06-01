@@ -57,7 +57,7 @@ create table if not exists content.del_item(
 CREATE OR replace function get_genre_by_id_film (uuid) RETURNS SETOF character array as
 $$
 select
-array_agg(distinct g."name"  )
+array_agg(distinct g.id)
 from "content".film_work fw2
 left join "content".genre_film_work gfw on gfw.film_work_id = fw2.id
 left join "content".genre g on g.id =gfw.genre_id
