@@ -11,4 +11,4 @@ def create_table(pg_connect: _connection):
     with pg_connect as conn, conn.cursor() as pg_cursor:
         pg_cursor: _cursor
         pg_cursor.execute(sql)
-    logging.info(" create_table: Таблицы созданы")
+    logging.info(" create_table: Tables created")

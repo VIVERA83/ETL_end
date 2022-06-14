@@ -31,6 +31,6 @@ def load_from_sqlite(
             obj = [schema().load(data=dict(record)) for record in records]
             postgres_saver.insert(table_name, obj)
             count_records += len(records)
-        logging.info(f" load_from_sqlite: в {table_name.upper()} загружено {count_records} записей")
+        logging.info(f" load_from_sqlite: в {table_name.upper()} uploaded {count_records} records")
     sqlite_loader.close()
     postgres_saver.close()

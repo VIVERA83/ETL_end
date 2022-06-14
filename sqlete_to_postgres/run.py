@@ -10,11 +10,15 @@ load_dotenv()
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
 
-    logging.info(" Начало создаем таблицы в POSTGRES")
+    logging.info(" Getting started creating tables in POSTGRES")
     pg_con = psycopg2.connect(dsn=os.getenv("POSTGRES_DSN"))
-    # create_table(pg_con)
 
-    logging.info(f" текущая папка {os.getcwd()+' app/db.sqlite'}")
-    logging.info(" Начало загрузки данных в POSTGRES")
+    try:
+        create_table(pg_con)
+    except Exception as er:
+        print(er)
+
+    logging.info(f" Current folder {os.getcwd() + ' app/db.sqlite'}")
+    logging.info(" Start uploading data to POSTGRES")
     load_from_sqlite(os.getenv("POSTGRES_DSN"), "app/db.sqlite", TABLE)
-    logging.info(" Загрузка данных в POSTGRES завершена")
+    logging.info(" Uploading data to POSTGRES completed")

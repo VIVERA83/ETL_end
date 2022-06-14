@@ -42,8 +42,8 @@ def load_from_postgres_to_elastic(state: State,
                         count = 0
                         for count, obj in enumerate(objs):
                             es.delete_document_by_id(obj.table_name, obj.field_id)
-                            logging.info(f" Удалена запись из {obj.table_name.upper()}, id = {obj.field_id}")
-                        logging.info(f" Всего удалено записей из {obj.table_name.upper()}, {count + 1}")
+                            logging.info(f" Deleted entry from {obj.table_name.upper()}, id = {obj.field_id}")
+                        logging.info(f" Total deleted records from {obj.table_name.upper()}, {count + 1}")
                     case _:
                         logging.info(f"load_from_postgres_to_elastic {index=}")
 

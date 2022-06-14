@@ -18,7 +18,7 @@ class PostgresSaver:
 
     def close(self):
         self.conn.close()
-        logging.info(f" PostgresSaver.close: Соединение с БД {self.db_name} закрыто")
+        logging.info(f" PostgresSaver.close: Connecting to the database {self.db_name} closed")
 
     def find_by_id(self, table_name: str, id_: UUID) -> bool:
         """Поиск записи по id"""
@@ -28,7 +28,7 @@ class PostgresSaver:
                 cursor.execute(query=query, vars=[id_])
             except psycopg2.ProgrammingError as ex:
                 logging.error(
-                    f"Возможно таблицы: {table_name} нет в БД: {self.db_name}, проверти ее наличие\n"
+                    f"Maybe tables: {table_name} not in the database: {self.db_name}, check its availability\n"
                     f"{ex}"
                 )
             return bool(cursor.fetchone())
@@ -56,6 +56,6 @@ class PostgresSaver:
                 cursor.executemany(query, vars_list)
             except psycopg2.DatabaseError as ex:
                 logging.error(
-                    f"Возможно таблицы: {table_name} нет в БД: {self.db_name}, проверти ее наличие\n"
+                    f"Maybe tables: {table_name} not in the database: {self.db_name}, check its availability\n"
                     f"{ex}"
                 )
